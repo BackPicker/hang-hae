@@ -7,16 +7,16 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Setter;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 
-@Data
-@Setter(AccessLevel.NONE)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class ReviewResponseDto {
     private int             totalCount; // 총 리뷰 수
@@ -24,8 +24,8 @@ public class ReviewResponseDto {
     private int             cursor;      // 다음 커서
     private List<ReviewDto> reviews; // 리뷰 목록
 
-    @Data
-    @Setter(AccessLevel.NONE)
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     public static class ReviewDto {
         private Long          id;           // 리뷰 ID
@@ -37,6 +37,9 @@ public class ReviewResponseDto {
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         @JsonSerialize(using = LocalDateTimeSerializer.class)
         @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-        private LocalDateTime createdAt; // 생성 날짜
+        private LocalDateTime createdAt;
+
     }
+
+
 }

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ public class ReviewService {
         return fileDir + filename;
     }
 
+    @Cacheable(cacheNames = "getReviews", key = "'reviews:page:' + #cursor + ':size:' + #size", cacheManager = "reviewCacheManager")
     public ReviewResponseDto getReviews(Long productId, Integer cursor, Integer size) {
         int pageSize   = size != null ? size : 10;
         int pageNumber = cursor != null ? cursor / pageSize : 0;
