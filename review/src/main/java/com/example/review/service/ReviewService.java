@@ -29,7 +29,6 @@ import java.util.UUID;
 public class ReviewService {
 
     private final ReviewRepository            reviewRepository;
-    private final ValidationAutoConfiguration validationAutoConfiguration;
 
     @Value("${file.dir}")
     private String fileDir;
