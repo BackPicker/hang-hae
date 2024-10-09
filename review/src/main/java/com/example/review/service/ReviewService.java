@@ -27,7 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewService {
 
-    private final ReviewRepository            reviewRepository;
+    private final ReviewRepository reviewRepository;
 
     @Value("${file.dir}")
     private String fileDir;
@@ -40,6 +40,7 @@ public class ReviewService {
     public ReviewResponseDto getReviews(Long productId, Integer cursor, Integer size) {
         int pageSize   = size != null ? size : 10;
         int pageNumber = cursor != null ? cursor / pageSize : 0;
+        log.info("cursor = {}", cursor);
 
         // 리뷰 조회
         List<Review> reviews = reviewRepository.findByProductId(productId, PageRequest.of(pageNumber, pageSize));
