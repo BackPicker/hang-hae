@@ -37,28 +37,25 @@ public class ReviewService {
     }
 
     @Cacheable(cacheNames = "getReviews", key = "'reviews:page:' + #cursor + ':size:' + #size", cacheManager = "reviewCacheManager")
-    public ReviewResponseDto getReviews(Long productId, Integer cursor, Integer size) {
-        int pageSize   = size != null ? size : 10;
-        int pageNumber = cursor != null ? cursor / pageSize : 0;
-        log.info("cursor = {}", cursor);
+    public ReviewResponseDto getReviews(Long productId, Long cursor, int size) {
 
         // 리뷰 조회
-        List<Review> reviews = reviewRepository.findByProductId(productId, PageRequest.of(pageNumber, pageSize));
+        List<Review> reviews = reviewRepository.findByProductId(productId, cursor, PageRequest.of(0, size));
         log.info("reviews = {}", reviews);
 
-        ReviewStatsDto reviewStats = calReviewRateStatus(productId);
-
-        int    totalCount   = (int) reviewStats.getTotalCount(); // 총 리뷰 수
-        double averageScore = roundToOneDecimal(reviewStats.getAverageScore());
-
-        // 커서 계산
-        int nextCursor = (pageNumber + 1) * pageSize < totalCount ? (pageNumber + 1) * pageSize : -1;
+        ReviewStatsDto reviewStats  = calReviewRateStatus(productId);
+        int            totalCount   = (int) reviewStats.getTotalCount(); // 총 리뷰 수
+        double         averageScore = roundToOneDecimal(reviewStats.getAverageScore());
 
         // DTO 변환
         List<ReviewResponseDto.ReviewDto> reviewDtos = reviews.stream()
                 .map(review -> new ReviewResponseDto.ReviewDto(review.getId(), review.getUser()
                         .getId(), review.getScore(), review.getContent(), review.getImageUrl(), review.getCreatedAt()))
                 .toList();
+
+        // 다음 커서 설정
+        Long nextCursor = reviews.isEmpty() ? null : reviews.get(reviews.size() - 1)
+                .getId();
 
         return new ReviewResponseDto(totalCount, averageScore, nextCursor, reviewDtos);
     }
