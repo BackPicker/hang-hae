@@ -21,7 +21,7 @@ import java.util.List;
 public class ReviewResponseDto {
     private int             totalCount; // 총 리뷰 수
     private double          score;    // 평균 점수
-    private int             cursor;      // 다음 커서
+    private Long             cursor;      // 다음 커서
     private List<ReviewDto> reviews; // 리뷰 목록
 
     @Getter

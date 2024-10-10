@@ -25,10 +25,9 @@ public class ReviewController {
 
     @ResponseBody
     @GetMapping("/products/{productId}/reviews")
-    public ReviewResponseDto getReviews(@PathVariable Long productId, @RequestParam(required = false) Integer cursor, @RequestParam(required = false) Integer size) {
-        ReviewResponseDto reviews = reviewService.getReviews(productId, cursor, size);
+    public ReviewResponseDto getReviews(@PathVariable Long productId, @RequestParam(required = false) Long cursor, @RequestParam(required = false) int size) {
 
-        return reviews;
+        return reviewService.getReviews(productId, cursor, size);
     }
 
     @PostMapping("/products/{productId}/reviews")
