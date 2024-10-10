@@ -75,22 +75,20 @@ public class ReviewService {
         return reviewRepository.findReviewCountAndAverageScoreByProductId(productId);
     }
 
-
     @Transactional
     public void addReview(Product product, User user, ReviewAddRequestDto requestDto) {
         if (reviewRepository.existsByProductAndUser(product, user)) {
             throw new ReviewRegistrationException("이미 작성된 리뷰가 있습니다.");
         }
-
         try {
+            // 중복 리뷰 체크 로직 추가 가능
             Review review = new Review(product, user, requestDto.getScore(), requestDto.getContent());
             reviewRepository.save(review);
         } catch (Exception e) {
-            log.error("리뷰 등록 실패: {}", e.getMessage());
-            throw new ReviewRegistrationException("리뷰 등록에 실패했습니다.");
+            log.error("리뷰 등록 실패 : {}", e.getMessage());
+            throw new ReviewRegistrationException(e); // 예외 이름 변경
         }
     }
-
 
     @Transactional
     public void addReviewWithFileName(Product product, User user, ReviewAddRequestDto requestDto, MultipartFile multipartFile) {
