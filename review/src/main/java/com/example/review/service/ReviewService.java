@@ -64,10 +64,9 @@ public class ReviewService {
         return Math.floor(value * 10) / 10;
     }
 
+    // 총 리뷰 수와 평균 점수 조회
     public ReviewStatsDto calReviewRateStatus(Long productId) {
-        // 총 리뷰 수와 평균 점수 조회
-        ReviewStatsDto reviewStats = reviewRepository.findReviewCountAndAverageScoreByProductId(productId);
-        return reviewStats;
+        return reviewRepository.findReviewCountAndAverageScoreByProductId(productId);
     }
 
     @Transactional

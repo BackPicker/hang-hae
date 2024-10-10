@@ -10,6 +10,7 @@ import com.example.review.service.ReviewService;
 import com.example.review.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,14 @@ public class ReviewController {
 
     @ResponseBody
     @GetMapping("/products/{productId}/reviews")
-    public ReviewResponseDto getReviews(@PathVariable Long productId, @RequestParam(required = false) Long cursor, @RequestParam(required = false) int size) {
-
-        return reviewService.getReviews(productId, cursor, size);
+    public ResponseEntity<ReviewResponseDto> getReviews(@PathVariable Long productId, @RequestParam(required = false) Long cursor, @RequestParam(defaultValue = "10") int size) {
+        // 기본값 설정
+        if (size <= 0) {
+            return ResponseEntity.badRequest()
+                    .body(null); // 잘못된 사이즈 처리
+        }
+        ReviewResponseDto response = reviewService.getReviews(productId, cursor, size);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/products/{productId}/reviews")
@@ -49,7 +55,6 @@ public class ReviewController {
         } else {
             reviewService.addReview(product, user, requestDto);
         }
-
 
         // result 값으로 상품 product 의 count / score 수정
         ReviewStatsDto reviewStatsDto = reviewService.calReviewRateStatus(productId);
