@@ -30,12 +30,14 @@ public class BeforeDataInit {
         productRepository.save(product);
 
         // 샘플 User 생성 및 저장
-        User user = new User("sampleUser"); // User 생성자에 맞게 조정
-        userRepository.save(user);
+        User userA = new User("sampleUser A"); // User 생성자에 맞게 조정
+        User userB = new User("sampleUser B"); // User 생성자에 맞게 조정
+        userRepository.save(userA);
+        userRepository.save(userB);
 
         // 샘플 Review 생성 및 저장
         for (int i = 0; i < 100; i++) {
-            Review review = new Review(product, user, new Random().nextInt(4) + 1, UUID.randomUUID()
+            Review review = new Review(product, userA, new Random().nextInt(4) + 1, UUID.randomUUID()
                     .toString()
                     .substring(0, 8), "http://example.com/image.jpg");
             reviewRepository.save(review);

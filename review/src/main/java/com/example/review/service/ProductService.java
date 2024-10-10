@@ -16,10 +16,8 @@ public class ProductService {
 
     /**
      * Product 하나 가져오기
-     *
-     * @param productId
-     * @return
      */
+    @Transactional
     public Product getSingleProduct(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
@@ -27,10 +25,6 @@ public class ProductService {
 
     /**
      * id, 리뷰 개수, 평점을 가져와서 update
-     *
-     * @param productId
-     * @param totalCount
-     * @param averageScore
      */
     @Transactional
     public void updateProductRating(Long productId, long totalCount, double averageScore) {
