@@ -45,22 +45,37 @@ public class ProductService {
         }
     }
 
-    @EventListener
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void txLogic(RLock rLock) {
-        rLock.unlock();
-    }
 
     /**
      * id, 리뷰 개수, 평점을 가져와서 update
      */
     @Transactional
     public void updateProductRating(Long productId, long totalCount, double averageScore) {
-        productRepository.updateProductRate(productId, totalCount, roundToOneDecimal(averageScore));
+        RLock lock = redissonClient.getLock("LOCK_PRODUCT_" + productId);
+        try {
+            if (lock.tryLock(5, 3, TimeUnit.SECONDS)) {
+                productRepository.updateProductRate(productId, totalCount, roundToOneDecimal(averageScore));
+            } else {
+                throw new RuntimeException("Could not acquire lock for product: " + productId);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (lock.isLocked() && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
+        }
     }
+
 
     private double roundToOneDecimal(double value) {
         return Math.floor(value * 10) / 10;
+    }
+
+    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void txLogic(RLock rLock) {
+        rLock.unlock();
     }
 
 }
