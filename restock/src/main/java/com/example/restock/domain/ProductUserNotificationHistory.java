@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 
+/**
+ * 상품 + 유저별 알림 히스토리
+ */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,7 +20,7 @@ public class ProductUserNotificationHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 고유 식별자
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product; // 알림을 받은 상품
 
@@ -28,21 +31,10 @@ public class ProductUserNotificationHistory {
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt; // 생성 시간
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt; // 수정 시간
-
-    // 엔티티가 처음 생성될 때 호출
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now(); // 현재 시간으로 설정
-        updatedAt = LocalDateTime.now(); // 현재 시간으로 설정
+        createdAt = LocalDateTime.now();
     }
 
-    // 엔티티가 수정될 때 호출
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now(); // 현재 시간으로 설정
-    }
 
 }
