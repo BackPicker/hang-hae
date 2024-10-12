@@ -28,8 +28,11 @@ public class ProductNotificationHistory {
 
     @Column(updatable = false)
     private LocalDateTime createdAt;// 생성 시간
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
+
+
+    public ProductNotificationHistory(Product product, NotificationStatus status, LocalDateTime createdAt) {
+        this.product   = product;
+        this.status    = status;
+        this.createdAt = createdAt;
     }
 }

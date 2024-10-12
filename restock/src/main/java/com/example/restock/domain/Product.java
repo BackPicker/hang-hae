@@ -1,15 +1,14 @@
 package com.example.restock.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 상품 테이블
  */
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
     @Id
@@ -20,6 +19,7 @@ public class Product {
 
     private Integer stockQuantity; // 현재 재고 수량
 
+    @Setter
     @Column(nullable = false)
     private Integer restockCount = 0; // 상품의 재입고 회차 (기본값 0)
 
