@@ -4,37 +4,31 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-
-/**
- * 상품 + 유저별 알림 히스토리
- */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "product_user_notification_history")
+@ToString
 public class ProductUserNotificationHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 고유 식별자
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private Product product; // 알림을 받은 상품
+    private Product product;
 
-    private Long userId; // 알림을 받은 사용자의 ID
+    @Column(nullable = false)
+    private Long userId;  // 유저 ID
 
-    @Enumerated(EnumType.STRING)
-    private NotificationResult notificationStatus; // 알림 전송 결과
+    @Column(nullable = false)
+    private LocalDateTime notifiedAt = LocalDateTime.now();  // 알림 전송 시간
 
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt; // 생성 시간
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
+    public ProductUserNotificationHistory(Product product, Long userId) {
+        this.product = product;
+        this.userId  = userId;
     }
-
-
 }

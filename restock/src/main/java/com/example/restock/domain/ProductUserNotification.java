@@ -6,14 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-/**
- * 상품별 재입고 알림을 설정한 유저
- */
+
 @Entity
 @Getter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "product_user_notification")
+@ToString
 public class ProductUserNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +18,13 @@ public class ProductUserNotification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private Product product; // 알림을 설정한 상품
+    private Product product;
 
-    private Long userId; // 알림을 설정한 사용자의 ID
+    @Column(nullable = false)
+    private Long userId;  // 유저 ID
 
-    private Integer notificationOrder;
-
+    public ProductUserNotification(Product product, Long userId) {
+        this.product = product;
+        this.userId  = userId;
+    }
 }
-

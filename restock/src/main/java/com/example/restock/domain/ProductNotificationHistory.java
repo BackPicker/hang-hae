@@ -1,38 +1,33 @@
 package com.example.restock.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-/**
- * 상품별 재입고 알림 히스토리
- */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "product_notification_history")
+@ToString
 public class ProductNotificationHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 히스토리의 고유 식별자
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private Product product; // 관련된 상품
+    private Product product;
 
+    @Setter
     @Enumerated(EnumType.STRING)
-    private NotificationStatus status; // 알림 전송 상태
+    private NotificationStatus status;  // 상태: IN_PROGRESS, CANCELED_BY_SOLD_OUT, CANCELED_BY_ERROR, COMPLETED
 
-    @Column(updatable = false)
-    private LocalDateTime createdAt;// 생성 시간
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-
-    public ProductNotificationHistory(Product product, NotificationStatus status, LocalDateTime createdAt) {
-        this.product   = product;
-        this.status    = status;
-        this.createdAt = createdAt;
+    public ProductNotificationHistory(Product product, NotificationStatus status) {
+        this.product = product;
+        this.status  = status;
     }
 }
+
