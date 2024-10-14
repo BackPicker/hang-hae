@@ -21,7 +21,6 @@ public class ProductRestockNotificationService {
     private final ProductUserNotificationRepository        userNotificationRepository;
     private final ProductNotificationHistoryRepository     notificationHistoryRepository;
     private final ProductUserNotificationHistoryRepository userNotificationHistoryRepository;
-    private final ProductUserNotificationRepository        productUserNotificationRepository;
 
     @Transactional
     public void sendRestockNotification(Long productId) {
