@@ -1,13 +1,18 @@
-package com.example.restock.service;
+package com.example.restock.product.service;
 
-import com.example.restock.aop.Retryable;
-import com.example.restock.domain.*;
+import com.example.restock.product.aop.Retryable;
 import com.example.restock.exception.NotificationSendingException;
 import com.example.restock.exception.ProductNotFoundException;
-import com.example.restock.repository.ProductNotificationHistoryRepository;
-import com.example.restock.repository.ProductRepository;
-import com.example.restock.repository.ProductUserNotificationHistoryRepository;
-import com.example.restock.repository.ProductUserNotificationRepository;
+import com.example.restock.notification.product_notification.domain.NotificationStatus;
+import com.example.restock.notification.product_notification.domain.ProductNotificationHistory;
+import com.example.restock.notification.product_user_notification.domain.ProductUserNotification;
+import com.example.restock.notification.product_user_notification.domain.ProductUserNotificationHistory;
+import com.example.restock.notification.product_user_notification.domain.ProductUserNotificationStatus;
+import com.example.restock.notification.product_user_notification.repository.ProductNotificationHistoryRepository;
+import com.example.restock.product.domain.Product;
+import com.example.restock.product.repository.ProductRepository;
+import com.example.restock.notification.product_user_notification.repository.ProductUserNotificationHistoryRepository;
+import com.example.restock.notification.product_notification.repository.ProductUserNotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,13 @@
-package com.example.restock.controller;
+package com.example.restock.product.controller;
 
 
-import com.example.restock.service.ProductRestockNotificationService;
+import com.example.restock.product.service.ProductRestockNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/products")
@@ -22,9 +25,7 @@ public class ProductRestockNotificationController {
 
     // 재입고 알림 전송 API (manual)
     @PostMapping("/admin/products/{productId}/notifications/re-stock")
-    public ResponseEntity<String> manualSendRestockNotification(@PathVariable Long productId,
-                                                                @RequestParam(required = false) Integer lastSuccessIndex) {
-        notificationService.manualSendRestockNotification(productId, lastSuccessIndex);
+    public ResponseEntity<String> manualSendRestockNotification(@PathVariable Long productId) {
         return ResponseEntity.ok("Manual notification process started.");
     }
 }

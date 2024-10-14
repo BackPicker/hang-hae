@@ -1,5 +1,6 @@
-package com.example.restock.domain;
+package com.example.restock.notification.product_user_notification.domain;
 
+import com.example.restock.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package com.example.restock.repository;
+package com.example.restock.notification.product_notification.repository;
 
-import com.example.restock.domain.ProductUserNotification;
-import com.example.restock.domain.ProductUserNotificationStatus;
+import com.example.restock.notification.product_user_notification.domain.ProductUserNotification;
+import com.example.restock.notification.product_user_notification.domain.ProductUserNotificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.restock.domain;
+package com.example.restock.product.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

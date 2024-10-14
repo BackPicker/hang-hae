@@ -1,10 +1,10 @@
 package com.example.restock;
 
-import com.example.restock.domain.Product;
-import com.example.restock.domain.ProductUserNotification;
-import com.example.restock.domain.ProductUserNotificationStatus;
-import com.example.restock.repository.ProductRepository;
-import com.example.restock.repository.ProductUserNotificationRepository;
+import com.example.restock.product.domain.Product;
+import com.example.restock.notification.product_user_notification.domain.ProductUserNotification;
+import com.example.restock.notification.product_user_notification.domain.ProductUserNotificationStatus;
+import com.example.restock.product.repository.ProductRepository;
+import com.example.restock.notification.product_notification.repository.ProductUserNotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;

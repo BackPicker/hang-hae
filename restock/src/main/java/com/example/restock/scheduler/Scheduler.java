@@ -1,8 +1,8 @@
 package com.example.restock.scheduler;
 
-import com.example.restock.domain.Product;
-import com.example.restock.repository.ProductRepository;
-import com.example.restock.service.ProductRestockNotificationService;
+import com.example.restock.product.domain.Product;
+import com.example.restock.product.repository.ProductRepository;
+import com.example.restock.product.service.ProductRestockNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

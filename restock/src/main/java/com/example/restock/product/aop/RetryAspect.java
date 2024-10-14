@@ -1,4 +1,4 @@
-package com.example.restock.aop;
+package com.example.restock.product.aop;
 
 
 import org.aspectj.lang.ProceedingJoinPoint;

@@ -1,7 +1,7 @@
 package com.example.restock;
 
-import com.example.restock.repository.ProductRepository;
-import com.example.restock.repository.ProductUserNotificationRepository;
+import com.example.restock.product.repository.ProductRepository;
+import com.example.restock.notification.product_notification.repository.ProductUserNotificationRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

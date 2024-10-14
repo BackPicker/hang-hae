@@ -1,4 +1,4 @@
-package com.example.restock.aop;
+package com.example.restock.product.aop;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
