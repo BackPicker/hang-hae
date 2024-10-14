@@ -18,7 +18,7 @@ public class Scheduler {
     private final ProductRestockNotificationService productRestockNotificationService;
     private final ProductRepository                 productRepository;
 
-    @Scheduled(cron = "*/1 * * * * *")
+    @Scheduled(cron = "*/5 * * * * *")
     public void updateQuantity() {
         List<Product> productList = productRepository.findAll();
         for (Product product : productList) {
