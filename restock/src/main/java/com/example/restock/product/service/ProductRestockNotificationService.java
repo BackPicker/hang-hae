@@ -1,18 +1,18 @@
 package com.example.restock.product.service;
 
-import com.example.restock.product.aop.Retryable;
 import com.example.restock.exception.NotificationSendingException;
 import com.example.restock.exception.ProductNotFoundException;
 import com.example.restock.notification.product_notification.domain.NotificationStatus;
 import com.example.restock.notification.product_notification.domain.ProductNotificationHistory;
+import com.example.restock.notification.product_notification.repository.ProductUserNotificationRepository;
 import com.example.restock.notification.product_user_notification.domain.ProductUserNotification;
 import com.example.restock.notification.product_user_notification.domain.ProductUserNotificationHistory;
 import com.example.restock.notification.product_user_notification.domain.ProductUserNotificationStatus;
 import com.example.restock.notification.product_user_notification.repository.ProductNotificationHistoryRepository;
+import com.example.restock.notification.product_user_notification.repository.ProductUserNotificationHistoryRepository;
+import com.example.restock.product.aop.Retryable;
 import com.example.restock.product.domain.Product;
 import com.example.restock.product.repository.ProductRepository;
-import com.example.restock.notification.product_user_notification.repository.ProductUserNotificationHistoryRepository;
-import com.example.restock.notification.product_notification.repository.ProductUserNotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductRestockNotificationService {
-    private final ProductRepository                    productRepository;
-    private final ProductUserNotificationRepository    userNotificationRepository;
+    private final ProductRepository productRepository;
+    private final ProductUserNotificationRepository userNotificationRepository;
     private final ProductNotificationHistoryRepository notificationHistoryRepository;
     private final ProductUserNotificationHistoryRepository userNotificationHistoryRepository;
 
@@ -33,8 +33,7 @@ public class ProductRestockNotificationService {
 
     @Transactional
     public void sendRestockNotification(Long productId, int startIndex) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다"));
 
         // 재입고 회차 증가 및 저장
         product.setRestockCount(product.getRestockCount() + 1);
@@ -44,16 +43,35 @@ public class ProductRestockNotificationService {
         ProductNotificationHistory notificationHistory = new ProductNotificationHistory(product, NotificationStatus.IN_PROGRESS);
         notificationHistoryRepository.save(notificationHistory);
 
-        // 알림 설정된 유저 리스트 조회
+        // 알림 전송 처리
+        processNotifications(productId, startIndex, notificationHistory, product);
+    }
+
+    @Transactional
+    public void manualSendRestockNotification(Long productId, int startIndex) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다"));
+
+        // 재입고 회차 증가 및 저장
+        product.setRestockCount(product.getRestockCount() + 1);
+        productRepository.save(product);
+
+        // 알림 상태 기록
+        ProductNotificationHistory notificationHistory = new ProductNotificationHistory(product, NotificationStatus.IN_PROGRESS);
+        notificationHistoryRepository.save(notificationHistory);
+
+        // 알림 전송 처리
+        processNotifications(productId, startIndex, notificationHistory, product);
+    }
+
+    private void processNotifications(Long productId, int startIndex, ProductNotificationHistory notificationHistory, Product product) {
         List<ProductUserNotification> userNotifications = userNotificationRepository.findAllByProductIdAndUserNotificationStatus(productId, ProductUserNotificationStatus.WAIT);
 
-        // 시작 인덱스 검증
         if (startIndex < 0 || startIndex >= userNotifications.size()) {
-            throw new IllegalArgumentException("Invalid start index for user notifications");
+            throw new IllegalArgumentException("유저 알림에 대한 시작 인덱스가 잘못되었습니다");
         }
 
-        long startTime    = System.currentTimeMillis();
-        int  requestCount = 0;
+        long startTime = System.currentTimeMillis();
+        int requestCount = 0;
 
         for (int i = startIndex; i < userNotifications.size(); i++) {
             ProductUserNotification userNotification = userNotifications.get(i);
@@ -100,7 +118,7 @@ public class ProductRestockNotificationService {
     @Retryable(value = 3)
     private void sendNotification(Long productId, Long userId) {
         String message = "상품이 재입고되었습니다.";
-        log.info("Product Id = {}, User ID {}: Notification sent successfully: {}", productId, userId, message);
+        log.info("상품 ID = {}, 사용자 ID {}: 알림이 성공적으로 전송되었습니다: {}", productId, userId, message);
     }
 
     private void manageRateLimiting(long startTime) {
@@ -111,8 +129,7 @@ public class ProductRestockNotificationService {
             try {
                 Thread.sleep(waitTime);
             } catch (InterruptedException e) {
-                Thread.currentThread()
-                        .interrupt();
+                Thread.currentThread().interrupt();
             }
         }
     }

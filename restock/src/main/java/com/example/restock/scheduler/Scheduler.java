@@ -16,7 +16,7 @@ import java.util.List;
 public class Scheduler {
 
     private final ProductRestockNotificationService productRestockNotificationService;
-    private final ProductRepository                 productRepository;
+    private final ProductRepository productRepository;
 
     @Scheduled(cron = "*/5 * * * * *")
     public void updateQuantity() {
@@ -28,8 +28,7 @@ public class Scheduler {
                     // 초기 인덱스는 0으로 설정하여 처음부터 알림을 보냄
                     productRestockNotificationService.sendRestockNotification(product.getId(), 0);
                 } catch (Exception e) {
-                    log.error("Error sending restock notification for product ID {}: {}", product.getId(), e.getMessage());
-                    // 예외가 발생했을 경우 로그를 남기고 계속 진행
+                    log.error("상품 ID {} 에 대한 재입고 알림 전송 중 오류 발생: {}", product.getId(), e.getMessage());
                 }
             }
         }
