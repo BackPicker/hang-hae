@@ -38,7 +38,7 @@ public class ProductRestockNotificationService {
 
         // 상품이 재입고 되었을 때, 재입고 알림을 설정한 유저들에게 알림 메시지를 전달해야 한다.
         // 설정된 유저 리스트 조회
-        List<ProductUserNotification> userNotifications = userNotificationRepository.findAllByProductId(productId);
+        List<ProductUserNotification> userNotifications = userNotificationRepository.findAllByProductIdAndUserNotificationStatus(productId, ProductUserNotificationStatus.WAIT);
 
         long startTime    = System.currentTimeMillis();
         int  requestCount = 0;
@@ -56,8 +56,9 @@ public class ProductRestockNotificationService {
             // 성공적으로 전송된 경우 히스토리 기록
             ProductUserNotificationHistory userHistory = new ProductUserNotificationHistory(product, userNotification.getUserId());
             userNotificationHistoryRepository.save(userHistory);
-            // 성공적으로 전송된 경우 알림 대기 삭제
-            productUserNotificationRepository.deleteByProductIdAndUserId(productId, userNotification.getUserId());
+            // 성공적으로 전송된 경우 WAIT -> SEND 변경
+            userNotification.setUserNotificationStatus(ProductUserNotificationStatus.SEND);
+
             // 재고 감소
             product.setStock(product.getStock() - 1);
             productRepository.save(product);

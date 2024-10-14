@@ -1,10 +1,7 @@
 package com.example.restock.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 
 @Entity
@@ -23,8 +20,18 @@ public class ProductUserNotification {
     @Column(nullable = false)
     private Long userId;  // 유저 ID
 
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private ProductUserNotificationStatus userNotificationStatus;
+
     public ProductUserNotification(Product product, Long userId) {
         this.product = product;
         this.userId  = userId;
+    }
+
+    public ProductUserNotification(Product product, Long userId, ProductUserNotificationStatus userNotificationStatus) {
+        this.product                = product;
+        this.userId                 = userId;
+        this.userNotificationStatus = userNotificationStatus;
     }
 }
