@@ -79,8 +79,7 @@ public class ProductRestockNotificationService {
 
     @Transactional
     public void manualSendRestockNotification(Long productId) {
-        // 유사한 로직을 사용하여 이전에 전송된 유저 목록에서 이어서 알림을 전송할 수 있도록 구현
-        sendRestockNotification(productId); // 기본 로직 재사용
+        sendRestockNotification(productId);
     }
 
     private void sendNotification(Long productId, Long userId) {
