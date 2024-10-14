@@ -18,8 +18,8 @@ public class BeforeDataInit {
 
     @EventListener(ApplicationReadyEvent.class)
     public void beforeData() {
-        Product itemA = new Product("itemA", 5000, 0);
-        Product itemB = new Product("itemB", 5000, 0);
+        Product itemA = new Product(5000, 0);
+        Product itemB = new Product(5000, 0);
         productRepository.save(itemA);
         productRepository.save(itemB);
 

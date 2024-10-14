@@ -24,11 +24,14 @@ public class Scheduler {
         for (Product product : productList) {
             int stock = product.getStock();
             if (stock > 0) {
-                productRestockNotificationService.sendRestockNotification(product.getId());
+                try {
+                    // 초기 인덱스는 0으로 설정하여 처음부터 알림을 보냄
+                    productRestockNotificationService.sendRestockNotification(product.getId(), 0);
+                } catch (Exception e) {
+                    log.error("Error sending restock notification for product ID {}: {}", product.getId(), e.getMessage());
+                    // 예외가 발생했을 경우 로그를 남기고 계속 진행
+                }
             }
-
         }
-
     }
-
 }

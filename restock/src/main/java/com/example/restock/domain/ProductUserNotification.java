@@ -24,10 +24,7 @@ public class ProductUserNotification {
     @Enumerated(EnumType.STRING)
     private ProductUserNotificationStatus userNotificationStatus;
 
-    public ProductUserNotification(Product product, Long userId) {
-        this.product = product;
-        this.userId  = userId;
-    }
+
 
     public ProductUserNotification(Product product, Long userId, ProductUserNotificationStatus userNotificationStatus) {
         this.product                = product;

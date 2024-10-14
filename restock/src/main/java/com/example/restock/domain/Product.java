@@ -13,9 +13,6 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
     @Setter
     @Column(nullable = false)
     private int stock;
@@ -24,8 +21,7 @@ public class Product {
     @Column(nullable = false)
     private int restockCount = 0;  // 재입고 회차
 
-    public Product(String name, int stock, int restockCount) {
-        this.name         = name;
+    public Product(int stock, int restockCount) {
         this.stock        = stock;
         this.restockCount = restockCount;
     }
