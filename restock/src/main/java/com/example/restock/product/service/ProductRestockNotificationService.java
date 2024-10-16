@@ -24,16 +24,17 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductRestockNotificationService {
-    private final ProductRepository productRepository;
-    private final ProductUserNotificationRepository userNotificationRepository;
-    private final ProductNotificationHistoryRepository notificationHistoryRepository;
+    private final ProductRepository                        productRepository;
+    private final ProductUserNotificationRepository        userNotificationRepository;
+    private final ProductNotificationHistoryRepository     notificationHistoryRepository;
     private final ProductUserNotificationHistoryRepository userNotificationHistoryRepository;
 
     private static final int MAX_REQUESTS_PER_SECOND = 500;
 
     @Transactional
     public void sendRestockNotification(Long productId, int startIndex) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다"));
 
         // 재입고 회차 증가 및 저장
         product.setRestockCount(product.getRestockCount() + 1);
@@ -49,7 +50,8 @@ public class ProductRestockNotificationService {
 
     @Transactional
     public void manualSendRestockNotification(Long productId, int startIndex) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다"));
 
         // 재입고 회차 증가 및 저장
         product.setRestockCount(product.getRestockCount() + 1);
@@ -70,8 +72,8 @@ public class ProductRestockNotificationService {
             throw new IllegalArgumentException("유저 알림에 대한 시작 인덱스가 잘못되었습니다");
         }
 
-        long startTime = System.currentTimeMillis();
-        int requestCount = 0;
+        long startTime    = System.currentTimeMillis();
+        int  requestCount = 0;
 
         for (int i = startIndex; i < userNotifications.size(); i++) {
             ProductUserNotification userNotification = userNotifications.get(i);
@@ -107,7 +109,7 @@ public class ProductRestockNotificationService {
             if (requestCount >= MAX_REQUESTS_PER_SECOND) {
                 manageRateLimiting(startTime);
                 requestCount = 0;
-                startTime = System.currentTimeMillis();
+                startTime    = System.currentTimeMillis();
             }
         }
 
@@ -123,13 +125,14 @@ public class ProductRestockNotificationService {
 
     private void manageRateLimiting(long startTime) {
         long elapsedTime = System.currentTimeMillis() - startTime;
-        long waitTime = 1000 - elapsedTime;
+        long waitTime    = 1000 - elapsedTime;
 
         if (waitTime > 0) {
             try {
                 Thread.sleep(waitTime);
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                Thread.currentThread()
+                        .interrupt();
             }
         }
     }
